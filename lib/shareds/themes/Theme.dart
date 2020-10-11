@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-final  ThemeData themeDataDefault =
+final ThemeData themeDataDefault =
   ThemeData(primaryColor: Colors.green[900],
       accentColor: Colors.blueAccent[700],);
 
