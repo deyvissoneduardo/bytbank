@@ -1,0 +1,1 @@
+const String PATH_LOGO = 'assets/images/logo.png';
