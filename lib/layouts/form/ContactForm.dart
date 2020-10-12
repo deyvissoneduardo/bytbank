@@ -1,3 +1,4 @@
+import 'package:bytbank/database/Database.dart';
 import 'package:bytbank/models/Contacts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -26,24 +27,16 @@ class _ContactFormState extends State<ContactForm> {
               padding: EdgeInsets.only(top: 8),
               child: TextField(
                 controller: _nameController,
-                decoration: InputDecoration(
-                  labelText: 'Full Name'
-                ),
-                style: TextStyle(
-                  fontSize: 24
-                ),
+                decoration: InputDecoration(labelText: 'Full Name'),
+                style: TextStyle(fontSize: 24),
               ),
             ),
             Padding(
               padding: EdgeInsets.only(top: 8),
               child: TextField(
                 controller: _accountNumberController,
-                decoration: InputDecoration(
-                  labelText: 'Account Number'
-                ),
-                style: TextStyle(
-                  fontSize: 24
-                ),
+                decoration: InputDecoration(labelText: 'Account Number'),
+                style: TextStyle(fontSize: 24),
                 keyboardType: TextInputType.number,
               ),
             ),
@@ -55,19 +48,17 @@ class _ContactFormState extends State<ContactForm> {
                 child: RaisedButton(
                   color: Colors.blue,
                   elevation: 9,
-                  child: Text('Create',
-                  style: TextStyle(
-                    fontSize: 20
-                  ),),
-                  onPressed: (){
+                  child: Text(
+                    'Create',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
                     /** recupera valores **/
                     final String name = _nameController.text;
-                    final int accountNumber = int.tryParse(_accountNumberController.text);
-
-                    final Contacts contact = Contacts(
-                      0,name, accountNumber
-                    );
-                    Navigator.pop(context, contact);
+                    final int accountNumber =
+                        int.tryParse(_accountNumberController.text);
+                    final Contacts contact = Contacts(0, name, accountNumber);
+                    save(contact).then((id) => Navigator.pop(context));
                   },
                 ),
               ),

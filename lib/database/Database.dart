@@ -2,45 +2,40 @@ import 'package:bytbank/models/Contacts.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
-Future<Database> createDataBase() {
-  final String _nameTable = 'contacts';
+final String _nameTable = 'contacts';
+final String _nameDatabase = 'bytbanck.db';
 
-  /** cria banco **/
-  return getDatabasesPath().then((dbPath) {
-    final String path = join(dbPath, 'bytbanck.db');
-    return openDatabase(path, onCreate: (db, version) {
-      db.execute('CREATE TABLE ${_nameTable}('
-          'id INTEGER PRIMARY KEY, '
-          'name TEXT, '
-          'account_number INTEGER)');
-    }, version: 1);
-  });
+Future<Database> getDatabase() async {
+  final String path = join(await getDatabasesPath(), _nameDatabase);
+  return openDatabase(path, onCreate: (db, version) {
+    db.execute('CREATE TABLE ${_nameTable}('
+        'id INTEGER PRIMARY KEY, '
+        'name TEXT, '
+        'account_number INTEGER)');
+  }, version: 1);
 }
 
 /** insere no banco **/
-Future<int> salve(Contacts contacts) {
-  return createDataBase().then((db) {
-    final Map<String, dynamic> contactMap = Map();
-    contactMap['name'] = contacts.fullName;
-    contactMap['account_number'] = contacts.accountNumber;
-    return db.insert('contacts', contactMap);
-  });
+Future<int> save(Contacts contacts) async {
+  final Database db = await getDatabase();
+  final Map<String, dynamic> contactMap = Map();
+  contactMap['name'] = contacts.fullName;
+  contactMap['account_number'] = contacts.accountNumber;
+  return db.insert(_nameTable, contactMap);
 }
 
 /** busca todos contatos **/
-Future<List<Contacts>> findAll() {
- return createDataBase().then((db) {
-   return db.query('contacts').then((maps) {
-      final List<Contacts> listContatcs = List();
-      for (Map<String, dynamic> map in maps) {
-        final Contacts contacts = Contacts(
-          map['id'],
-          map['name'],
-          map['account_number'],
-        );
-        listContatcs.add(contacts);
-      }
-      return listContatcs;
-    });
-  });
+Future<List<Contacts>> findAll() async {
+  final Database db = await getDatabase();
+  final List<Map<String, dynamic>> result = await db.query(_nameTable);
+  final List<Contacts> listContatcs = List();
+  for (Map<String, dynamic> row in result) {
+    final Contacts contacts = Contacts(
+      row['id'],
+      row['name'],
+      row['account_number'],
+    );
+    listContatcs.add(contacts);
+  }
+  return listContatcs;
 }

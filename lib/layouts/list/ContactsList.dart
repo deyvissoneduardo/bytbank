@@ -49,9 +49,7 @@ class ContactsList extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pushNamed(context, GeneratedRoute.ROTA_CONTACT_FORM).then(
-            (contact) => debugPrint(contact.toString()),
-          );
+          Navigator.pushNamed(context, GeneratedRoute.ROTA_CONTACT_FORM);
         },
         child: Icon(Icons.add),
       ),
